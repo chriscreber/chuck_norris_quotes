@@ -1,6 +1,5 @@
 // pages/admin.tsx
 import React from 'react'
-import { useState } from 'react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { gql, useMutation } from '@apollo/client'
 import toast, { Toaster } from 'react-hot-toast'
@@ -81,7 +80,7 @@ const Admin = () => {
     console.log('In submit');
     const { icon_url, value } = data
     const imageUrl = `https://${process.env.NEXT_PUBLIC_AWS_S3_BUCKET_NAME}.s3.amazonaws.com/${icon_url[0]?.name}`
-    const variables = { icon_url: imageUrl, value }
+    const variables = { icon_url, value }
     try {
       toast.promise(create_chuck_norris_post({ variables }), {
         loading: 'Creating new post..',
@@ -92,42 +91,6 @@ const Admin = () => {
       console.error(error)
     }
   }
-
-  const [message, setMessage] = useState('');
-
-  const [updated, setUpdated] = useState(message);
-
-  const handleChange = (event) => {
-    console.log(event);
-    setMessage(event.target.value);
-  };
-
-  // const handleClick = () => {
-  //   // 👇 "message" stores input field value
-  //   callAPI()
-  //   // setUpdated(message);
-  // };
-
-  const callAPI = async () => {
-    try {
-        const res = await fetch(
-          `https://matchilling-chuck-norris-jokes-v1.p.rapidapi.com/jokes/random`,
-          {
-              method: 'GET',
-              headers: {
-                'X-RapidAPI-Key': '9cfc2ab3f3mshca598d402899cebp10a845jsn569caa243a47',
-                'X-RapidAPI-Host': 'matchilling-chuck-norris-jokes-v1.p.rapidapi.com'
-              },
-          }
-      );
-        const data = await res.json();
-        console.log(data);
-        console.log(data['value']);
-        setMessage(data['value']);
-    } catch (err) {
-        console.log(err);
-    }
-};
 
   return (
     <div className="container mx-auto max-w-md py-12">
@@ -141,27 +104,18 @@ const Admin = () => {
             onChange={uploadPhoto}
             type="file"
             accept="image/png, image/jpeg"
-            name="icon_url"
+            name="image"
           />
         </label>
         <label className="block">
           <span className="text-gray-700">Description</span>
-          <textarea
+          <input
             placeholder="Text"
             {...register('value', { required: true })}
-            onChange={handleChange}
-            name="value"
+            name="text"
             type="text"
-            value={message}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
           />
-          <button 
-            className="my-4 capitalize bg-blue-500 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-600" 
-            type='button' 
-            onClick={callAPI}
-          >
-            Generate Joke
-          </button>
         </label>
 
         <button

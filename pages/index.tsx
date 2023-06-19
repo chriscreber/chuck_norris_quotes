@@ -1,7 +1,8 @@
 // /pages/index.tsx
 import Head from "next/head";
 import { gql, useQuery, useMutation } from "@apollo/client";
-import { AwesomeLink } from "../components/AwesomeLink";
+// import { AwesomeLink } from "../components/AwesomeLink";
+import { ChuckNorrisPost } from "../components/ChuckNorrisPost";
 import type { Link as Node } from "@prisma/client";
 import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0/client";
@@ -28,6 +29,25 @@ const AllLinksQuery = gql`
   }
 `;
 
+const AllChuckNorrisPostsQuery = gql`
+  query AllChuckNorrisPostsQuery($first: Int, $after: ID) {
+    chuck_norris_posts(first: $first, after: $after) {
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+      edges {
+        cursor
+        node {
+          id
+          icon_url
+          value
+        }
+      }
+    }
+  }
+`;
+
 function Home() {
   const { user } = useUser()
   console.log("in index file");
@@ -38,7 +58,11 @@ function Home() {
   console.log(process.env.NODE_ENV === 'production')
   console.log(`user: ${user}`)
   console.log()
-  const { data, loading, error, fetchMore } = useQuery(AllLinksQuery, {
+  // const { data, loading, error, fetchMore } = useQuery(AllLinksQuery, {
+  //   variables: { first: 3 },
+  // });
+
+  const { data, loading, error, fetchMore } = useQuery(AllChuckNorrisPostsQuery, {
     variables: { first: 3 },
   });
 
@@ -56,7 +80,7 @@ function Home() {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Oh no... {error.message}</p>;
 
-  const { endCursor, hasNextPage } = data?.links.pageInfo;
+  const { endCursor, hasNextPage } = data?.chuck_norris_posts.pageInfo;
 
   return (
     <div>
@@ -66,16 +90,12 @@ function Home() {
       </Head>
       <div className="container mx-auto max-w-5xl my-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {data?.links.edges.map(({ node }: { node: Node }) => (
+          {data?.chuck_norris_posts.edges.map(({ node }: { node: Node }) => (
             <Link href={`/link/${node.id}`}>
-              <AwesomeLink
-                key={node.id}
-                title={node.title}
-                category={node.category}
-                url={node.url}
+              <ChuckNorrisPost
+                icon_url={node.icon_url}
+                value={node.value}
                 id={node.id}
-                description={node.description}
-                imageUrl={node.imageUrl}
               />
             </Link>
           ))}
@@ -87,9 +107,9 @@ function Home() {
               fetchMore({
                 variables: { after: endCursor },
                 updateQuery: (prevResult, { fetchMoreResult }) => {
-                  fetchMoreResult.links.edges = [
-                    ...prevResult.links.edges,
-                    ...fetchMoreResult.links.edges,
+                  fetchMoreResult.chuck_norris_posts.edges = [
+                    ...prevResult.chuck_norris_posts.edges,
+                    ...fetchMoreResult.chuck_norris_posts.edges,
                   ];
                   return fetchMoreResult;
                 },
