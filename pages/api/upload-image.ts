@@ -5,7 +5,8 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     // 1.
-    console.log('1')
+    console.log('1');
+    console.log(process.env.REACT_APP_X_RAPIDAPI_KEY);
     const s3 = new aws.S3({
       accessKeyId: process.env.APP_AWS_ACCESS_KEY,
       secretAccessKey: process.env.APP_AWS_SECRET_KEY,

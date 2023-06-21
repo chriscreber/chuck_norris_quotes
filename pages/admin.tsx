@@ -6,6 +6,8 @@ import { gql, useMutation } from '@apollo/client'
 import toast, { Toaster } from 'react-hot-toast'
 import type { GetServerSideProps } from 'next'
 import { getSession } from '@auth0/nextjs-auth0'
+import dotenv from 'dotenv';
+import callApi from "./api/get-chuck-norris-quote"
 
 // type FormValues = {
 //   title: string;
@@ -49,6 +51,11 @@ const Admin = () => {
     formState: { errors },
   } = useForm<FormValues>()
 
+  console.log('process2');
+  console.log(process);
+  console.log(process.env);
+  console.log(process.env.X_RAPIDAPI_KEY);
+  console.log(process.env.X_RAPIDAPI_HOST);
   // Upload photo function
   const uploadPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length <= 0) return
@@ -108,26 +115,72 @@ const Admin = () => {
   //   // setUpdated(message);
   // };
 
-  const callAPI = async () => {
+  
+
+  // const callChuckAPI = async () => {
+  //   try {
+  //     const data = await callApi();
+  //     console.log(data);
+  //     setMessage(data);
+
+
+  //     // console.log('hi')
+  //     // const res = await fetch(`/api/get-chuck-norris-quote`)
+  //     // console.log(res);
+  //     // const data = await res.json()
+  //     // console.log(data);
+  //     // setMessage(data);
+
+
+  //     // toast.promise(
+  //     //   () => {
+  //     //     console.log('hi')
+  //     //     const res = fetch(`/api/get-chuck-norris-quote`)
+  //     //     console.log(res);
+  //     //     const data = res.json()
+  //     //     console.log(data);
+  //     //     setMessage(data);
+  //     //   },
+  //     //   {
+  //     //     loading: 'Uploading...',
+  //     //     success: 'Image successfully uploaded!🎉',
+  //     //     error: `Upload failed 😥 Please try again ${error}`,
+  //     //   },
+  //     // )
+  //   } catch (err) {
+  //       console.log(err);
+  //   }
+  // };
+
+  const callChuckAPI = async () => {
     try {
-        const res = await fetch(
-          `https://matchilling-chuck-norris-jokes-v1.p.rapidapi.com/jokes/random`,
-          {
-              method: 'GET',
-              headers: {
-                'X-RapidAPI-Key': '9cfc2ab3f3mshca598d402899cebp10a845jsn569caa243a47',
-                'X-RapidAPI-Host': 'matchilling-chuck-norris-jokes-v1.p.rapidapi.com'
-              },
-          }
+      dotenv.config();
+      console.log('process');
+      console.log(process);
+      console.log(process.env);
+      console.log(process.env.NEXT_PUBLIC_X_RAPIDAPI_KEY);
+      console.log(process.env.NEXT_PUBLIC_X_RAPIDAPI_HOST);
+      console.log(process.env.NEXT_PUBLIC_AWS_S3_BUCKET_NAME);
+      console.log(process.env.APP_AWS_REGION);
+      console.log(process.env.AUTH0_BASE_URL);
+      const res = await fetch(
+        `https://matchilling-chuck-norris-jokes-v1.p.rapidapi.com/jokes/random`,
+        {
+            method: 'GET',
+            headers: {
+              'X-RapidAPI-Key': process.env.NEXT_PUBLIC_X_RAPIDAPI_KEY,
+              'X-RapidAPI-Host': process.env.NEXT_PUBLIC_X_RAPIDAPI_HOST
+            },
+        }
       );
-        const data = await res.json();
-        console.log(data);
-        console.log(data['value']);
-        setMessage(data['value']);
+      const data = await res.json();
+      console.log(data);
+      console.log(data['value']);
+      setMessage(data['value']);
     } catch (err) {
         console.log(err);
     }
-};
+  };
 
   return (
     <div className="container mx-auto max-w-md py-12">
@@ -158,7 +211,7 @@ const Admin = () => {
           <button 
             className="my-4 capitalize bg-blue-500 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-600" 
             type='button' 
-            onClick={callAPI}
+            onClick={callChuckAPI}
           >
             Generate Joke
           </button>
