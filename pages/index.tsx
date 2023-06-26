@@ -1,33 +1,10 @@
 // /pages/index.tsx
 import Head from "next/head";
 import { gql, useQuery, useMutation } from "@apollo/client";
-// import { AwesomeLink } from "../components/AwesomeLink";
 import { ChuckNorrisPost } from "../components/ChuckNorrisPost";
 import type { Link as Node } from "@prisma/client";
 import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0/client";
-
-const AllLinksQuery = gql`
-  query allLinksQuery($first: Int, $after: ID) {
-    links(first: $first, after: $after) {
-      pageInfo {
-        endCursor
-        hasNextPage
-      }
-      edges {
-        cursor
-        node {
-          imageUrl
-          url
-          title
-          category
-          description
-          id
-        }
-      }
-    }
-  }
-`;
 
 const AllChuckNorrisPostsQuery = gql`
   query AllChuckNorrisPostsQuery($first: Int, $after: ID) {
@@ -50,17 +27,6 @@ const AllChuckNorrisPostsQuery = gql`
 
 function Home() {
   const { user } = useUser()
-  console.log("in index file");
-  // console.log(process);
-  console.log(process.env);
-  console.log('new changes')
-  console.log(process.env.NODE_ENV);
-  console.log(process.env.NODE_ENV === 'production')
-  console.log(`user: ${user}`)
-  // const { data, loading, error, fetchMore } = useQuery(AllLinksQuery, {
-  //   variables: { first: 3 },
-  // });
-
   const { data, loading, error, fetchMore } = useQuery(AllChuckNorrisPostsQuery, {
     variables: { first: 3 },
   });

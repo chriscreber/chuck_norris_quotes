@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import { links } from '../data/links';
 import { chuck_norris_posts } from '../data/chuck_norris_posts';
 
 const prisma = new PrismaClient();
@@ -11,10 +10,6 @@ async function main() {
       email: 'test@gmail.com',
       role: 'ADMIN',
     },
-  });
-
-  await prisma.link.createMany({
-    data: links,
   });
 
   const keysToExtract = ["icon_url", "value"];

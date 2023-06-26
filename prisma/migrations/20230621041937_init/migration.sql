@@ -1,3 +1,18 @@
+-- CreateEnum
+CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN');
+
+-- CreateTable
+CREATE TABLE "User" (
+    "id" SERIAL NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "email" TEXT,
+    "image" TEXT,
+    "role" "Role" NOT NULL DEFAULT 'USER',
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateTable
 CREATE TABLE "chuck_norris_post" (
     "id" SERIAL NOT NULL,
@@ -14,6 +29,9 @@ CREATE TABLE "_UserTochuck_norris_post" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_UserTochuck_norris_post_AB_unique" ON "_UserTochuck_norris_post"("A", "B");

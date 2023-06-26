@@ -6,28 +6,6 @@ import { gql, useMutation } from '@apollo/client'
 import toast, { Toaster } from 'react-hot-toast'
 import type { GetServerSideProps } from 'next'
 import { getSession } from '@auth0/nextjs-auth0'
-import dotenv from 'dotenv';
-import callApi from "./api/get-chuck-norris-quote"
-
-// type FormValues = {
-//   title: string;
-//   url: string;
-//   category: string;
-//   description: string;
-//   image: FileList;
-// }
-
-// const CreateLinkMutation = gql`
-//   mutation($title: String!, $url: String!, $imageUrl: String!, $category: String!, $description: String!) {
-//     createLink(title: $title, url: $url, imageUrl: $imageUrl, category: $category, description: $description) {
-//       title
-//       url
-//       imageUrl
-//       category
-//       description
-//     }
-//   }
-// `
 
 type FormValues = {
   icon_url: string;
@@ -109,60 +87,8 @@ const Admin = () => {
     setMessage(event.target.value);
   };
 
-  // const handleClick = () => {
-  //   // 👇 "message" stores input field value
-  //   callAPI()
-  //   // setUpdated(message);
-  // };
-
-  
-
-  // const callChuckAPI = async () => {
-  //   try {
-  //     const data = await callApi();
-  //     console.log(data);
-  //     setMessage(data);
-
-
-  //     // console.log('hi')
-  //     // const res = await fetch(`/api/get-chuck-norris-quote`)
-  //     // console.log(res);
-  //     // const data = await res.json()
-  //     // console.log(data);
-  //     // setMessage(data);
-
-
-  //     // toast.promise(
-  //     //   () => {
-  //     //     console.log('hi')
-  //     //     const res = fetch(`/api/get-chuck-norris-quote`)
-  //     //     console.log(res);
-  //     //     const data = res.json()
-  //     //     console.log(data);
-  //     //     setMessage(data);
-  //     //   },
-  //     //   {
-  //     //     loading: 'Uploading...',
-  //     //     success: 'Image successfully uploaded!🎉',
-  //     //     error: `Upload failed 😥 Please try again ${error}`,
-  //     //   },
-  //     // )
-  //   } catch (err) {
-  //       console.log(err);
-  //   }
-  // };
-
   const callChuckAPI = async () => {
     try {
-      dotenv.config();
-      console.log('process');
-      console.log(process);
-      console.log(process.env);
-      console.log(process.env.NEXT_PUBLIC_X_RAPIDAPI_KEY);
-      console.log(process.env.NEXT_PUBLIC_X_RAPIDAPI_HOST);
-      console.log(process.env.NEXT_PUBLIC_AWS_S3_BUCKET_NAME);
-      console.log(process.env.APP_AWS_REGION);
-      console.log(process.env.AUTH0_BASE_URL);
       const res = await fetch(
         `https://matchilling-chuck-norris-jokes-v1.p.rapidapi.com/jokes/random`,
         {
@@ -174,8 +100,6 @@ const Admin = () => {
         }
       );
       const data = await res.json();
-      console.log(data);
-      console.log(data['value']);
       setMessage(data['value']);
     } catch (err) {
         console.log(err);
@@ -185,7 +109,7 @@ const Admin = () => {
   return (
     <div className="container mx-auto max-w-md py-12">
       <Toaster />
-      <h1 className="text-3xl font-medium my-5">Create a new link</h1>
+      <h1 className="text-3xl font-medium my-5">Create a new quote</h1>
       <form className="grid grid-cols-1 gap-y-6 shadow-lg p-8 rounded-lg" onSubmit={handleSubmit(onSubmit)}>
       <label className="block">
           <span className="text-gray-700">Upload a .png or .jpg image (max 1MB).</span>
@@ -244,8 +168,6 @@ const Admin = () => {
 }
 
 export default Admin
-
-// getServerSideProps code remains unchanged
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const session = await getSession(req, res);

@@ -20,25 +20,12 @@ model User {
   email     String?  @unique
   image     String?
   role      Role     @default(USER)
-  bookmarks Link[]
   chuck_norris_posts chuck_norris_post[]
 }
 
 enum Role {
   USER
   ADMIN
-}
-
-model Link {
-  id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  title       String
-  description String
-  url         String
-  imageUrl    String
-  category    String
-  users       User[]
 }
 
 model chuck_norris_post {

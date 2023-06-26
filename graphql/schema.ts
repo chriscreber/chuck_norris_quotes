@@ -1,7 +1,6 @@
 // graphql/schema.ts
 
 import { builder } from "./builder";
-import "./types/Link"
 import "./types/User"
 import "./types/chuck_norris_post"
 
